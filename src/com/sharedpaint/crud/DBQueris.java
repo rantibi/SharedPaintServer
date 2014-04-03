@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
@@ -18,10 +19,10 @@ public class DBQueris implements DBQuerisLocal {
 	@PersistenceContext(unitName = "GlassFishEJBPaintServer")
 	protected transient EntityManager em;
 
-	@Override 
+	@Override
 	@SuppressWarnings("unchecked")
-	public List<BoardDrawable> getDrawablesInBoard(long boardId,
-			Date from, Date to) {
+	public List<BoardDrawable> getDrawablesInBoard(long boardId, Date from,
+			Date to) {
 
 		Query q = em
 				.createQuery("SELECT x FROM BoardDrawable x "
@@ -50,9 +51,10 @@ public class DBQueris implements DBQuerisLocal {
 
 	@SuppressWarnings("unchecked")
 	public List<String> getUsersEmailInBoard(long boardId) {
-		Query q = em.createQuery("SELECT x.email FROM User x join x.boards board "
-				+ "WHERE board.id = :board");
-		q.setParameter("board", boardId); 
+		Query q = em
+				.createQuery("SELECT x.email FROM User x join x.boards board "
+						+ "WHERE board.id = :board");
+		q.setParameter("board", boardId);
 
 		return (List<String>) q.getResultList();
 
@@ -65,7 +67,12 @@ public class DBQueris implements DBQuerisLocal {
 				+ "x.dateTime = (SELECT MAX(y.dateTime) FROM BoardDrawable y "
 				+ "WHERE y.board.id = :boardId)");
 		q.setParameter("boardId", boardId);
-		return (BoardDrawable) q.getSingleResult();
+
+		try {
+			return (BoardDrawable) q.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 
 	@Override
@@ -75,7 +82,12 @@ public class DBQueris implements DBQuerisLocal {
 				+ "x.dateTime = (SELECT MAX(y.dateTime) FROM RedoDrawable y "
 				+ "WHERE y.board.id = :boardId)");
 		q.setParameter("boardId", boardId);
-		return (RedoDrawable) q.getSingleResult();
+
+		try {
+			return (RedoDrawable) q.getSingleResult();
+		} catch (NoResultException e) {
+			return null;
+		}
 	}
 
 	@Override

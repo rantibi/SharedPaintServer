@@ -148,16 +148,18 @@ public interface BoardsHandlerInterface {
 	 * 
 	 * @param boardId
 	 * @return
+	 * @throws SharedPaintException 
 	 */
-	public boolean undoInBoard(long boardId);
+	public void undoInBoard(long boardId) throws SharedPaintException;
 
 	/**
 	 * Retrieve the last drawable that undo in board
 	 * 
 	 * @param boardId
 	 * @return
+	 * @throws SharedPaintException 
 	 */
-	public boolean redoInBoard(long boardId);
+	public void redoInBoard(long boardId) throws SharedPaintException;
 
 	/**
 	 * This method return new drawables id's, so that it cannot repeat. The

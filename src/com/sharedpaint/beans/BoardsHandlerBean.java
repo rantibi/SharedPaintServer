@@ -113,8 +113,14 @@ public class BoardsHandlerBean implements BoardsHandlerInterface {
 	@Override
 	public void deleteBoard(long boardId) throws SharedPaintException {
 		locks.getLock(boardId).writeLock().lock();
-		try {
+		try {			
 			Board board = readBoard(boardId);
+			
+			for (User user : board.getMembers()) {
+				user.getBoards().remove(board);
+				userFacade.update(user);
+			} 
+			
 			boardFacade.delete(board);
 		} finally {
 			locks.getLock(boardId).writeLock().unlock();
@@ -302,14 +308,14 @@ public class BoardsHandlerBean implements BoardsHandlerInterface {
 
 
 	@Override
-	public boolean undoInBoard(long boardId) {
+	public void undoInBoard(long boardId) throws SharedPaintException {
 		locks.getLock(boardId).writeLock().lock();
 		try {
 			BoardDrawable lastDrawable = dbQuerisLocal
 					.getLastDrawableInBoard(boardId);
 
 			if (lastDrawable == null) {
-				return false;
+				throw new SharedPaintException("No drawable to undo");
 			}
 
 			Board board = lastDrawable.getBoard();
@@ -335,21 +341,20 @@ public class BoardsHandlerBean implements BoardsHandlerInterface {
 			redoDrawableFacade.create(redoDrawable);
 			boardDrawableFacade.delete(lastDrawable);
 			boardFacade.update(board);
-			return true;
 		} finally {
 			locks.getLock(boardId).writeLock().unlock();
 		}
 	}
 
 	@Override
-	public boolean redoInBoard(long boardId) {
+	public void redoInBoard(long boardId) throws SharedPaintException {
 		locks.getLock(boardId).writeLock().lock();
 		try {
 			RedoDrawable redoDrawable = dbQuerisLocal
 					.getRedoDrawableInBoard(boardId);
 
 			if (redoDrawable == null) {
-				return false;
+				throw new SharedPaintException("No drawable to redo");
 			}
 
 			Board board = redoDrawable.getBoard();
@@ -361,7 +366,6 @@ public class BoardsHandlerBean implements BoardsHandlerInterface {
 			boardDrawableFacade.create(boardDrawable);
 			redoDrawableFacade.delete(redoDrawable);
 			boardFacade.update(board);
-			return true;
 		} finally {
 			locks.getLock(boardId).writeLock().unlock();
 		}

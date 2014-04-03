@@ -192,20 +192,31 @@ public class BoardsHandlerResource {
 	@Path("/board_undo")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Interceptors({ Login.class, UserInBoard.class })
-	public Response getBoardUndo(@Context HttpServletRequest request,
+	public Response boardUndo(@Context HttpServletRequest request,
 			@QueryParam("board_id") @BoardId long boardId) {
-		boardsHandler.undoInBoard(boardId);
-		return Response.ok("Success").build();
+		try {
+			boardsHandler.undoInBoard(boardId);
+			return Response.ok("Success").build();
+		} catch (SharedPaintException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage())
+					.build();
+		}
+
 	}
 
 	@GET
 	@Path("/board_redo")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Interceptors({ Login.class, UserInBoard.class })
-	public Response getBoardRedo(@Context HttpServletRequest request,
+	public Response boardRedo(@Context HttpServletRequest request,
 			@QueryParam("board_id") @BoardId long boardId) {
-		boardsHandler.redoInBoard(boardId);
-		return Response.ok("Success").build();
+		try {
+			boardsHandler.redoInBoard(boardId);
+			return Response.ok("Success").build();
+		} catch (SharedPaintException e) {
+			return Response.status(Status.BAD_REQUEST).entity(e.getMessage())
+					.build();
+		}
 	}
 
 	@GET

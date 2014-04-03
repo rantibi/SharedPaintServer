@@ -26,7 +26,7 @@ public class Login {
 		String authorization = request.getHeader(AUTHORIZATION);
 		 
 		if(authorization == null){
-			return Response.status(400).entity("Access Denied!")
+			return Response.status(401).entity("Access Denied!")
 					.type(MediaType.TEXT_PLAIN).build();
 		}
 		 
@@ -35,7 +35,7 @@ public class Login {
 		String password = st.hasMoreTokens() ? st.nextToken() : null;
 
 		if ((email == null) || (password == null)) {
-			return Response.status(400).entity("Access Denied!")
+			return Response.status(401).entity("Access Denied!")
 					.type(MediaType.TEXT_PLAIN).build();
 		}
 
@@ -43,7 +43,7 @@ public class Login {
 			boardsHandler.login(email, password);
 			return ic.proceed();
 		} catch (Exception e) {
-			return Response.status(400).entity(e.getMessage())
+			return Response.status(401).entity(e.getMessage())
 					.type(MediaType.TEXT_PLAIN).build();
 		}
 	}

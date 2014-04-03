@@ -31,7 +31,7 @@ public class AdminInBoard {
 		String authorization = request.getHeader(Login.AUTHORIZATION);
 
 		if (authorization == null) {
-			return Response.status(400).entity("Access Denied!")
+			return Response.status(401).entity("Access Denied!")
 					.type(MediaType.TEXT_PLAIN).build();
 		}
 
@@ -40,14 +40,14 @@ public class AdminInBoard {
 		email = st.hasMoreTokens() ? st.nextToken() : null;
 
 		if (email == null) {
-			return Response.status(400).entity("Access Denied!")
+			return Response.status(401).entity("Access Denied!")
 					.type(MediaType.TEXT_PLAIN).build();
 		}
 
 		long boardId = getBoardId(ic);
 
 		if (boardId == -1) {
-			return Response.status(400).entity("Access Denied!")
+			return Response.status(40).entity("Access Denied!")
 					.type(MediaType.TEXT_PLAIN).build();
 
 		}
@@ -59,7 +59,7 @@ public class AdminInBoard {
 			}
 			return ic.proceed();
 		} catch (Exception e) {
-			return Response.status(400).entity(e.getMessage())
+			return Response.status(401).entity(e.getMessage())
 					.type(MediaType.TEXT_PLAIN).build();
 		}
 	}
