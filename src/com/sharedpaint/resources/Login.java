@@ -21,7 +21,7 @@ public class Login {
 	private BoardsHandlerInterface boardsHandler;
 
 	@AroundInvoke
-	private Object login(InvocationContext ic) { 
+	private Object login(InvocationContext ic) throws Exception { 
 		HttpServletRequest request = (HttpServletRequest) ic.getParameters()[0];
 		String authorization = request.getHeader(AUTHORIZATION);
 		 
@@ -40,11 +40,11 @@ public class Login {
 		}
 
 		try {
-			boardsHandler.login(email, password);
-			return ic.proceed();
+			boardsHandler.login(email, password);			
 		} catch (Exception e) {
 			return Response.status(401).entity(e.getMessage())
 					.type(MediaType.TEXT_PLAIN).build();
 		}
+		return ic.proceed();
 	}
 }

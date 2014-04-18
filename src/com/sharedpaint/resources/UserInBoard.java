@@ -25,7 +25,7 @@ public class UserInBoard {
 	private BoardsHandlerInterface boardsHandler;
 
 	@AroundInvoke
-	private Object isUserInBoard(InvocationContext ic) {
+	private Object isUserInBoard(InvocationContext ic) throws Exception {
 		String email = null;
 		
 		HttpServletRequest request = (HttpServletRequest) ic.getParameters()[0];
@@ -53,17 +53,12 @@ public class UserInBoard {
 					.type(MediaType.TEXT_PLAIN).build();
 
 		}
-
-		try {
-			if (!boardsHandler.isUserMemberInBoard(email, boardId)) {
-				throw new SharedPaintException("User " + email
-						+ " not member in board: " + boardId);
-			}
-			return ic.proceed();
-		} catch (Exception e) {
-			return Response.status(400).entity(e.getMessage())
-					.type(MediaType.TEXT_PLAIN).build();
+		
+		if (!boardsHandler.isUserMemberInBoard(email, boardId)) {
+			throw new SharedPaintException("User " + email
+					+ " not member in board: " + boardId);
 		}
+		return ic.proceed();
 	}
 
 	private long getBoardId(InvocationContext ic) {

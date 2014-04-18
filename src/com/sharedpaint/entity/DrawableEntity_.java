@@ -6,7 +6,7 @@ import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
-@Generated(value="Dali", date="2014-02-28T22:45:09.586+0200")
+@Generated(value="Dali", date="2014-04-13T11:44:50.359+0300")
 @StaticMetamodel(DrawableEntity.class)
 public class DrawableEntity_ extends AbstractSharedPaintEntity_ {
 	public static volatile SingularAttribute<DrawableEntity, Board> board;

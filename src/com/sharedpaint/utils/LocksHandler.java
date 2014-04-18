@@ -8,23 +8,23 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class LocksHandler<T> {
-	private Map<T, ReadWriteLock> locks;
+	private Map<T, Lock> locks;
 	private Lock lock;
 
 	public LocksHandler() {
-		locks = new HashMap<T, ReadWriteLock>();
+		locks = new HashMap<T, Lock>();
 		lock = new ReentrantLock();
 	}
 
-	public ReadWriteLock getLock(T key) {
-		ReadWriteLock readWriteLock = locks.get(key);
+	private Lock getLock(T key) {
+		Lock readWriteLock = locks.get(key);
 		if (readWriteLock == null) {
 			lock.lock();
 			try {
 				readWriteLock = locks.get(key);
 				
 				if (readWriteLock == null) {
-					readWriteLock = new ReentrantReadWriteLock();
+					readWriteLock = new ReentrantLock();
 					locks.put(key, readWriteLock);
 				}
 			} finally {
@@ -36,24 +36,12 @@ public class LocksHandler<T> {
 
 	}
 
-	public void startReadOperation(T key) {
-		getLock(key).readLock().lock();
-		getLock(key).writeLock().lock();
-		getLock(key).readLock().unlock();
+	public void lock(T key) {
+		getLock(key).lock();
 	}
-
-	public void finishReadOpertion(T key) {
-		getLock(key).writeLock().unlock();
-	}
-
-	public void startWriteOperation(T key) {
-		getLock(key).writeLock().lock();
-		getLock(key).readLock().lock();
-	}
-
-	public void finishWriteOperation(T key) {
-		getLock(key).readLock().unlock();
-		getLock(key).writeLock().unlock();
+	
+	public void unlock(T key) {
+		getLock(key).unlock();
 	}
 
 }
