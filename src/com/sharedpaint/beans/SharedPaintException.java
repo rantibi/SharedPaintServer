@@ -1,5 +1,8 @@
 package com.sharedpaint.beans;
 
+/**
+ * Base project exception
+ */
 public class SharedPaintException extends Exception {
 	private static final long serialVersionUID = 1L;
 

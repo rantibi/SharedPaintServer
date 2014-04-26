@@ -7,6 +7,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+/**
+ * Catch all errors and set error status responce
+ */
 @ManagedBean
 public class ErrorHandler {
 

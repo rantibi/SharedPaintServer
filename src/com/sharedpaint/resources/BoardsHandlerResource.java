@@ -43,18 +43,6 @@ public class BoardsHandlerResource {
 	private BoardsHandlerInterface boardsHandler;
 
 	@GET
-	@Path("/test")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Interceptors({ BoardLock.class })
-	public Response test(@Context HttpServletRequest request,
-			@QueryParam("board_id") @BoardId long boardId) {
-		if (boardId == 100) {
-			throw new RuntimeException("aaa");
-		}
-		return Response.ok(new Gson().toJson("abc")).build();
-	}
-
-	@GET
 	@Path("/login")
 	@Interceptors(Login.class)
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.TEXT_HTML })
@@ -102,7 +90,7 @@ public class BoardsHandlerResource {
 	@GET
 	@Path("/new_drawble_ids")
 	@Produces(MediaType.APPLICATION_JSON)
-	@Interceptors({ Login.class, UserInBoard.class, BoardLock.class })
+	@Interceptors({ Login.class, UserInBoard.class })
 	public Response getNewDrawbleIds(@Context HttpServletRequest request,
 			@QueryParam("board_id") @BoardId long boardId,
 			@QueryParam("count") int count) {
@@ -114,7 +102,7 @@ public class BoardsHandlerResource {
 	@GET
 	@Path("/drawables_in_board")
 	@Produces(MediaType.APPLICATION_JSON)
-	@Interceptors({ Login.class, UserInBoard.class, BoardLock.class })
+	@Interceptors({ Login.class, UserInBoard.class, ReadBoardLock.class })
 	public Response getDrawablesInBoard(@Context HttpServletRequest request,
 			@QueryParam("board_id") @BoardId long boardId)
 			throws SharedPaintException {
@@ -127,7 +115,7 @@ public class BoardsHandlerResource {
 	@GET
 	@Path("/board_update")
 	@Produces(MediaType.APPLICATION_JSON)
-	@Interceptors({ Login.class, UserInBoard.class, BoardLock.class })
+	@Interceptors({ Login.class, UserInBoard.class, ReadBoardLock.class })
 	public Response getBoardUpdate(@Context HttpServletRequest request,
 			@QueryParam("board_id") @BoardId long boardId,
 			@QueryParam("from") long from) throws SharedPaintException {
@@ -140,7 +128,7 @@ public class BoardsHandlerResource {
 	@POST
 	@Path("/add_drawable_to_board")
 	@Produces(MediaType.APPLICATION_FORM_URLENCODED)
-	@Interceptors({ Login.class, UserInBoard.class, BoardLock.class })
+	@Interceptors({ Login.class, UserInBoard.class, WriteBoardLock.class })
 	public Response addDrawableToBoard(@Context HttpServletRequest request,
 			@QueryParam("board_id") @BoardId long boardId,
 			@FormParam("drawable") String drawable) throws SharedPaintException {
@@ -157,7 +145,7 @@ public class BoardsHandlerResource {
 	@GET
 	@Path("/board_undo")
 	@Produces(MediaType.APPLICATION_JSON)
-	@Interceptors({ Login.class, UserInBoard.class, BoardLock.class })
+	@Interceptors({ Login.class, UserInBoard.class, WriteBoardLock.class })
 	public Response boardUndo(@Context HttpServletRequest request,
 			@QueryParam("board_id") @BoardId long boardId)
 			throws SharedPaintException {
@@ -168,7 +156,7 @@ public class BoardsHandlerResource {
 	@GET
 	@Path("/board_redo")
 	@Produces(MediaType.APPLICATION_JSON)
-	@Interceptors({ Login.class, UserInBoard.class, BoardLock.class })
+	@Interceptors({ Login.class, UserInBoard.class, WriteBoardLock.class })
 	public Response boardRedo(@Context HttpServletRequest request,
 			@QueryParam("board_id") @BoardId long boardId)
 			throws SharedPaintException {
@@ -179,7 +167,7 @@ public class BoardsHandlerResource {
 	@GET
 	@Path("/remove_board_member")
 	@Produces(MediaType.APPLICATION_JSON)
-	@Interceptors({ Login.class, UserInBoard.class, BoardLock.class })
+	@Interceptors({ Login.class, UserInBoard.class, WriteBoardLock.class })
 	public Response removeBoardMember(@Context HttpServletRequest request,
 			@QueryParam("board_id") @BoardId long boardId,
 			@QueryParam("user_email") String userEmail)
@@ -191,7 +179,7 @@ public class BoardsHandlerResource {
 	@GET
 	@Path("/delete_board")
 	@Produces(MediaType.APPLICATION_JSON)
-	@Interceptors({ Login.class, AdminInBoard.class, BoardLock.class })
+	@Interceptors({ Login.class, AdminInBoard.class, WriteBoardLock.class })
 	public Response deleteBoard(@Context HttpServletRequest request,
 			@QueryParam("board_id") @BoardId long boardId)
 			throws SharedPaintException {
@@ -202,7 +190,7 @@ public class BoardsHandlerResource {
 	@GET
 	@Path("/leave_board")
 	@Produces(MediaType.APPLICATION_JSON)
-	@Interceptors({ Login.class, UserInBoard.class, BoardLock.class })
+	@Interceptors({ Login.class, UserInBoard.class, WriteBoardLock.class })
 	public Response leaveBoard(@Context HttpServletRequest request,
 			@QueryParam("board_id") @BoardId long boardId)
 			throws SharedPaintException {
@@ -214,7 +202,7 @@ public class BoardsHandlerResource {
 	@GET
 	@Path("/add_board_member")
 	@Produces(MediaType.APPLICATION_JSON)
-	@Interceptors({ Login.class, AdminInBoard.class, BoardLock.class })
+	@Interceptors({ Login.class, AdminInBoard.class, WriteBoardLock.class })
 	public Response addMemberToBoard(@Context HttpServletRequest request,
 			@QueryParam("board_id") @BoardId long boardId,
 			@QueryParam("user_email") String userEmail)
@@ -227,7 +215,7 @@ public class BoardsHandlerResource {
 	@GET
 	@Path("/board_members")
 	@Produces(MediaType.APPLICATION_JSON)
-	@Interceptors({ Login.class, UserInBoard.class, BoardLock.class })
+	@Interceptors({ Login.class, UserInBoard.class, ReadBoardLock.class })
 	public Response getUsersEmailInBoard(@Context HttpServletRequest request,
 			@QueryParam("board_id") @BoardId long boardId)
 			throws SharedPaintException {

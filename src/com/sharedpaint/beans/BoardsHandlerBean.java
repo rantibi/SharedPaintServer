@@ -83,8 +83,7 @@ public class BoardsHandlerBean implements BoardsHandlerInterface {
 
 	@Override
 	public User login(String email, String password)
-			throws SharedPaintException {
-		// TODO: add lock here
+			throws SharedPaintException {		
 		User user = userFacade.read(email);
 
 		if ((user == null) || (!password.equals(user.getPassword()))) {

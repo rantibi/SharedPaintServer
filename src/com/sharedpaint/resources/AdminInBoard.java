@@ -16,6 +16,9 @@ import com.sharedpaint.beans.BoardsHandlerInterface;
 import com.sharedpaint.beans.SharedPaintException;
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
 
+/**
+ * Check that current user board admin
+ */
 @ManagedBean
 public class AdminInBoard {
 
