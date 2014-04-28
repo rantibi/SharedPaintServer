@@ -18,7 +18,7 @@ public class ReadBoardLock extends BoardLock {
 
 	@Override
 	protected void unlock(ReadWriteLock lock) {
-		lock.readLock().lock();
+		lock.readLock().unlock();
 	}
 
 }
